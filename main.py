@@ -26,8 +26,9 @@ def compute_fitness(candidate, target_audio):
     pad_size = WND - (candidate_audio.size %  WND)
     candidate_fft = np.abs(np.fft.rfft(np.pad(candidate_audio, (0, pad_size)).reshape((-1, WND)) * np.hanning(WND)))
     target_fft = np.abs(np.fft.rfft(np.pad(target_audio, (0, pad_size)).reshape((-1, WND)) * np.hanning(WND)))
-    fitness = np.maximum(candidate_fft[:, 2:] / target_fft[:, 2:], target_fft[:, 2:] / candidate_fft[:, 2:]).sum()
-    # fitness = np.sum((candidate_audio - target_audio) ** 2)
+    fitness = np.sum((candidate_fft - target_fft)**2)
+    #fitness = np.maximum(candidate_fft / target_fft, target_fft / candidate_fft).sum()
+    #fitness = np.sum((candidate_audio - target_audio) ** 2)
     return fitness
 
 def generator(random, args):
@@ -70,20 +71,20 @@ if __name__ == '__main__':
     audio_data = chord.fluidsynth()
 
     rand = Random()
-    rand.seed(time())
-    es = inspyred.ec.GA(rand)
-    es.variator = [inspyred.ec.variators.uniform_crossover, inspyred.ec.variators.gaussian_mutation]
+    rand.seed(time()) # time()
+    es = inspyred.ec.ES(rand)
+    #es.variator = [inspyred.ec.variators.uniform_crossover, inspyred.ec.variators.gaussian_mutation]
     es.observer = observer
-    es.terminator = [inspyred.ec.terminators.evaluation_termination, inspyred.ec.terminators.diversity_termination]
+    es.terminator = inspyred.ec.terminators.generation_termination
     final_pop = es.evolve(
         generator=generator, 
         mp_evaluator=evaluator,
         evaluator=inspyred.ec.evaluators.parallel_evaluation_mp,
         mp_num_cpus=4,
         pop_size=100, 
-        num_elites=2,
         bounder=bounder,
-        max_evaluations=30000,
+        max_generations=300,
+        sigma=30,
         maximize=False,
         num_notes=7,
         audio_target=target
