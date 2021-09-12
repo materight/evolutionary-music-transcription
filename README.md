@@ -1,6 +1,6 @@
 # Evolutionary Music Transcription
 
-An algorithm for automatic music transcription based on evolution strategies (ES). Converts a raw music file to its MIDI representation.
+An algorithm for automatic music transcription based on *Evolution Strategies* (ES). Converts a raw music file to its MIDI representation.
 
 ## Get started
 - Clone the repository
