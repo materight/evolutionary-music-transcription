@@ -4,5 +4,5 @@ An algorithm for automatic music transcription based on *Evolution Strategies* (
 
 ## Get started
 - Clone the repository
-- Install the required dependencies by running `pip install numpy sounddevice soundfile pretty_midi inspyred`
+- Install the required dependencies by running `pip install -r requirements.txt`
 - Run `main.py`. The input sample can be easily changed in the code.
